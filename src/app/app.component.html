@@ -1,7 +1,7 @@
-<!--News Headlines header has a burger-style side-nav open button and a settings menu using a material icon-->
-<mat-toolbar color="primary">
-  <button mat-button (click)="sidenav.open()"><mat-icon>menu</mat-icon></button>
-  <span>News Headlines</span>
+<mat-toolbar color="warn">
+  <button class="sidebar-button" mat-button (click)="sidenav.open()"><mat-icon>menu</mat-icon></button>
+  <span (click)="sidenav.close()"></span>
+  <span>NEWSBUZZ</span>
   <span class="example-spacer"></span>
   <button mat-button [matMenuTriggerFor]="appMenu">
     <mat-icon>settings</mat-icon>
@@ -13,41 +13,59 @@
   <button mat-menu-item>Settings</button>
   <button mat-menu-item>Help</button>
 </mat-menu>
+<div>
+  <div class="col-5 body-main" style="display: flex; float: left;">
+    <mat-sidenav-container class="example-container">
+      <mat-sidenav #sidenav class="example-sidenav">
+        <mat-list class="list-nav">
+          <mat-list-item class="list-item" *ngFor="let source of (mSources$ | async)?.sources"
+            (click)="searchArticles(source.id); sidenav.close()">
+            <span class="source-name"> {{ source.name }}</span>
+          </mat-list-item>
+        </mat-list>
+      </mat-sidenav>
 
-<!--sidenav component to add side content to a fullscreen app-->
-<mat-sidenav-container class="example-container">
-  <mat-sidenav #sidenav class="example-sidenav">
-    <mat-list class="list-nav">
-      <mat-list-item class="list-item" *ngFor="let source of (mSources$ | async)?.sources"
-        (click)="searchArticles(source.id); sidenav.close()">
-        <span class="source-name"> {{ source.name }}</span>
-      </mat-list-item>
-    </mat-list>
-  </mat-sidenav>
-
-  <mat-card appearance="outlined" class="example-card"
-    *ngFor="let article of (mArticles$ | async)?.articles; index as i">
-    <mat-card-header>
-      <div mat-card-avatar [ngStyle]="{
+      <ng-container *ngFor="let article of (mArticles$ | async)?.articles; index as i">
+        <span>
+          <mat-card appearance="outlined" class="example-card">
+            <mat-card-header>
+              <div mat-card-avatar [ngStyle]="{
           'background-image':
             'url(../assets/images/' + article.source.id + '.png)'
         }" class="example-header-image"></div>
-      <mat-card-title class="title">{{ article.title }}</mat-card-title>
-      <mat-card-subtitle>{{ article.source.name }}</mat-card-subtitle>
-    </mat-card-header>
+              <mat-card-title class="title">{{ article.title }}</mat-card-title>
+              <mat-card-subtitle>{{ article.source.name }}</mat-card-subtitle>
+            </mat-card-header>
 
-    <img mat-card-image class="img-article" src="{{ article.urlToImage }}" alt="" />
-    <mat-card-content>
-      <p>
-        {{ article.description }}
-      </p>
-    </mat-card-content>
-    <mat-card-actions class="action-buttons">
-      <button mat-button color="white">
-        <mat-icon>thumb_up_alt</mat-icon> 12 Likes
-      </button>
-      <button mat-button color="white"><mat-icon>share</mat-icon> Share</button>
-      <a mat-button color="white" href="{{ article.url }}" target="_blank"><mat-icon>visibility</mat-icon> More</a>
-    </mat-card-actions>
-  </mat-card>
-</mat-sidenav-container>
+            <img mat-card-image class="img-article" src="{{ article.urlToImage }}" alt="" />
+            <mat-card-content>
+              <p>
+                {{ article.description }}
+              </p>
+            </mat-card-content>
+            <mat-card-actions class="action-buttons">
+              <button mat-button color="white">
+                <mat-icon>thumb_up_alt</mat-icon> 12 Likes
+              </button>
+              <button mat-button color="white"><mat-icon>share</mat-icon> Share</button>
+              <a mat-button color="white" href="{{ article.url }}" target="_blank"><mat-icon>visibility</mat-icon>
+                More</a>
+            </mat-card-actions>
+          </mat-card>
+        </span>
+      </ng-container>
+    </mat-sidenav-container>
+  </div>
+
+  <div class="col-6" style="float: left; margin-top: 15px; margin-left: 5%;" id="description">
+    <!--Article Description-->
+    <img mat-card-image style="height: 200px; width: 500px;" src="https://t3.ftcdn.net/jpg/05/34/25/46/360_F_534254623_DT8sbwmLW41gZ8EvhDZqYZb8h7dO6vZQ.png" alt="" />
+    <ng-container *ngFor="let index of repeatNumber">
+    <ng-container *ngFor="let article of (mArticles$ | async)?.articles; index as i">
+      <img mat-card-image class="img-article" src="{{ article.urlToImage }}" alt="" />
+    </ng-container>
+  </ng-container>
+    
+  </div>
+
+</div>
